@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist COMEX — Exportação do Zero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:     #0D1F3C;
+    --blue:     #1A4A8A;
+    --mid:      #2D6BC4;
+    --light:    #5B9BD5;
+    --pale:     #EAF1FB;
+    --palest:   #F4F8FD;
+    --white:    #FFFFFF;
+    --ink:      #0D1F3C;
+    --text:     #2C3E5A;
+    --muted:    #7A8FA8;
+    --border:   #D0DFF0;
+    --check-bg: #E0EDF8;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--palest);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .header-left {}
+
+  .header-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 6px;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 300;
+  }
+
+  .header-date {
+    text-align: right;
+  }
+
+  .date-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 4px;
+  }
+
+  .date-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 4px 12px;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--pale);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--mid), var(--light));
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  .progress-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--mid);
+    font-weight: 500;
+    white-space: nowrap;
+    min-width: 48px;
+    text-align: right;
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--palest);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    flex: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .section-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--pale);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 10px;
+  }
+
+  .section-toggle {
+    font-size: 11px;
+    color: var(--muted);
+    transition: transform 0.2s;
+  }
+
+  .section-body {
+    padding: 0.75rem 1.5rem 1rem;
+  }
+
+  /* ── ITEMS ── */
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .item:last-child {
+    border-bottom: none;
+  }
+
+  .item:hover .check-box {
+    border-color: var(--mid);
+    background: var(--check-bg);
+  }
+
+  .check-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    background: var(--white);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .check-box.checked {
+    background: var(--mid);
+    border-color: var(--mid);
+  }
+
+  .check-icon {
+    display: none;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .check-box.checked .check-icon {
+    display: block;
+  }
+
+  .item-content {
+    flex: 1;
+  }
+
+  .item-label {
+    font-size: 13.5px;
+    color: var(--text);
+    font-weight: 400;
+    line-height: 1.45;
+    transition: color 0.15s;
+  }
+
+  .item.done .item-label {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--border);
+  }
+
+  .item-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  .item-tag {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 3px;
+  }
+
+  .tag-doc   { background: #EAF1FB; color: #1A4A8A; }
+  .tag-op    { background: #E8F5EE; color: #1A6B3C; }
+  .tag-alert { background: #FDF3E3; color: #8A5C00; }
+  .tag-legal { background: #F3EAFA; color: #5A1A8A; }
+
+  /* ── DOC GLOSSÁRIO ── */
+  .docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+    padding: 0.75rem 0 0.25rem;
+  }
+
+  .doc-card {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .doc-card:hover {
+    border-color: var(--mid);
+    background: var(--pale);
+  }
+
+  .doc-card.checked {
+    border-color: var(--mid);
+    background: var(--pale);
+  }
+
+  .doc-check {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-size: 10px;
+    color: transparent;
+  }
+
+  .doc-card.checked .doc-check {
+    background: var(--mid);
+    border-color: var(--mid);
+    color: white;
+    font-weight: 700;
+  }
+
+  .doc-info {}
+
+  .doc-sigla {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+
+  .doc-name {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 1px;
+    line-height: 1.3;
+  }
+
+  /* ── NOTES ── */
+  .notes-area {
+    margin-top: 1.5rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .notes-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .notes-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .notes-line {
+    border-bottom: 1px solid var(--border);
+    height: 28px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 0 4px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .footer-brand {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .footer-brand span {
+    color: var(--mid);
+  }
+
+  .footer-reset {
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--white);
+    transition: all 0.15s;
+  }
+
+  .footer-reset:hover {
+    color: var(--navy);
+    border-color: var(--mid);
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; padding: 0; }
+    .page { max-width: 100%; }
+    .header { border-radius: 0; }
+    .section { break-inside: avoid; }
+    .footer-reset { display: none; }
+    .progress-bar-wrap { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-eyebrow">Exportação do Zero · Boas Práticas</div>
+      <div class="header-title">Checklist Diário COMEX</div>
+      <div class="header-sub">Operação · Documentação · Compliance</div>
+    </div>
+    <div class="header-date">
+      <div class="date-label">Data</div>
+      <div class="date-value" id="dataHoje">__/__/____</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar-wrap">
+    <span class="progress-label">Progresso do dia</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-count" id="progressCount">0 / 0</span>
+  </div>
+
+  <!-- ══ SEÇÃO 1: DOCUMENTAÇÃO ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📄</div>
+      <div class="section-title">Documentos Obrigatórios</div>
+      <span class="section-badge" id="badge-docs">0/8</span>
+    </div>
+    <div class="section-body">
+      <div class="docs-grid" id="docs-grid">
+
+        <div class="doc-card" data-group="docs" onclick="toggleDoc(this)">
+          <div class="doc-check">✓</div>
+          <div class="doc-info">
+            <div class="doc-sigla">NF</div>
+            <div class="doc-name">Nota Fiscal</div>
+          </div>
+        </div>
+
+        <div class="doc-card" data-group="docs" onclick="toggleDoc(this)">
+          <div class="doc-check">✓</div>
+          <div class="doc-info">
+            <div class="doc-sigla">Invoice</div>
+            <div class="doc-name">Fatura Comercial</div>
+          </div>
+        </div>
+
+        <div class="doc-card" data-group="docs" onclick="toggleDoc(this)">
+          <div class="doc-check">✓</div>
+          <div class="doc-info">
+            <div class="doc-sigla">P. List</div>
+            <div class="doc-name">Packing List</div>
+          </div>
+        </div>
+
+        <div class="doc-card" data-group="docs" onclick="toggleDoc(this)">
+          <div class="doc-check">✓</div>
+          <div class="doc-info">
+            <div class="doc-sigla">B/L</div>
+            <div class="doc-name">Bill of Lading</div>
+          </div>
+        </div>
+
+        <div class="doc-card" data-group="docs" onclick="toggleDoc(this)">
+          <div class="doc-check">✓</div>
+          <div class="doc-info">
+            <div class="doc-sigla">CRT</div>
+            <div class="doc-name">Conhec. Rodoviário</div>
+          </div>
+        </div>
+
+        <div class="doc-card" data-group="docs" onclick="toggleDoc(this)">
+          <div class="doc-check">✓</div>
+          <div class="doc-info">
+            <div class="doc-sigla">DANFE</div>
+            <div class="doc-name">Doc. Aux. NF-e</div>
+          </div>
+        </div>
+
+        <div class="doc-card" data-group="docs" onclick="toggleDoc(this)">
+          <div class="doc-check">✓</div>
+          <div class="doc-info">
+            <div class="doc-sigla">DI / DUIMP</div>
+            <div class="doc-name">Declaração Import.</div>
+          </div>
+        </div>
+
+        <div class="doc-card" data-group="docs" onclick="toggleDoc(this)">
+          <div class="doc-check">✓</div>
+          <div class="doc-info">
+            <div class="doc-sigla">DUE</div>
+            <div class="doc-name">Declaração Export.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SEÇÃO 2: ANTES DO EMBARQUE ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🚢</div>
+      <div class="section-title">Antes do Embarque</div>
+      <span class="section-badge" id="badge-pre">0/6</span>
+    </div>
+    <div class="section-body">
+
+      <div class="item" data-group="pre" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Conferir dados do exportador / importador na Invoice</div>
+          <div class="item-note">Nome, endereço, CNPJ/Tax ID — qualquer erro atrasa o desembaraço</div>
+        </div>
+        <span class="item-tag tag-doc">Doc</span>
+      </div>
+
+      <div class="item" data-group="pre" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Validar NCM e descrição da mercadoria</div>
+          <div class="item-note">NCM incorreto gera canal vermelho e multa</div>
+        </div>
+        <span class="item-tag tag-alert">Atenção</span>
+      </div>
+
+      <div class="item" data-group="pre" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Confirmar Incoterm acordado com o cliente</div>
+          <div class="item-note">EXW, FOB, CIF — define quem paga o quê e até onde</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+      <div class="item" data-group="pre" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Verificar licença de exportação (LI) se exigida</div>
+          <div class="item-note">Produtos controlados, agro, medicamentos e outros</div>
+        </div>
+        <span class="item-tag tag-legal">Legal</span>
+      </div>
+
+      <div class="item" data-group="pre" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Confirmar booking com o armador / transportadora</div>
+          <div class="item-note">Cut-off documental e de carga confirmados</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+      <div class="item" data-group="pre" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Checar prazo de validade dos certificados exigidos</div>
+          <div class="item-note">Origem, fitossanitário, sanitário — conforme o produto</div>
+        </div>
+        <span class="item-tag tag-doc">Doc</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ SEÇÃO 3: DESPACHO ADUANEIRO ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🏛️</div>
+      <div class="section-title">Despacho Aduaneiro</div>
+      <span class="section-badge" id="badge-despacho">0/5</span>
+    </div>
+    <div class="section-body">
+
+      <div class="item" data-group="despacho" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Registrar DUE (exportação) ou DI/DUIMP (importação) no Siscomex</div>
+        </div>
+        <span class="item-tag tag-legal">Legal</span>
+      </div>
+
+      <div class="item" data-group="despacho" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Acompanhar canal aduaneiro (verde, amarelo, vermelho ou cinza)</div>
+          <div class="item-note">Canal vermelho = inspeção física — alinhar prazo com o cliente</div>
+        </div>
+        <span class="item-tag tag-alert">Atenção</span>
+      </div>
+
+      <div class="item" data-group="despacho" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Confirmar recolhimento de impostos e taxas (II, IPI, PIS/COFINS)</div>
+        </div>
+        <span class="item-tag tag-legal">Legal</span>
+      </div>
+
+      <div class="item" data-group="despacho" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Verificar prazo de armazenagem no porto / TECA</div>
+          <div class="item-note">Evitar demurrage e detention — custo oculto mais frequente</div>
+        </div>
+        <span class="item-tag tag-alert">Atenção</span>
+      </div>
+
+      <div class="item" data-group="despacho" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Alinhar com despachante o status do desembaraço</div>
+          <div class="item-note">Atualizar cliente se houver qualquer alteração de prazo</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ SEÇÃO 4: OPERAÇÃO LOGÍSTICA ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🚛</div>
+      <div class="section-title">Operação Logística</div>
+      <span class="section-badge" id="badge-logistica">0/5</span>
+    </div>
+    <div class="section-body">
+
+      <div class="item" data-group="logistica" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Confirmar coleta ou entrega com a transportadora</div>
+          <div class="item-note">Porto de Itajaí, Portonave, SFS ou Imbituba — conforme rota</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+      <div class="item" data-group="logistica" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Verificar modal mais adequado para a carga</div>
+          <div class="item-note">Marítimo FCL/LCL · Aéreo · Rodoviário · Multimodal</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+      <div class="item" data-group="logistica" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Checar ETD e ETA atualizados com o armador</div>
+          <div class="item-note">Expected Time of Departure / Arrival — comunicar cliente</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+      <div class="item" data-group="logistica" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Confirmar emissão e envio do B/L ou CRT ao cliente</div>
+        </div>
+        <span class="item-tag tag-doc">Doc</span>
+      </div>
+
+      <div class="item" data-group="logistica" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Registrar ocorrências e atualizar o cliente proativamente</div>
+          <div class="item-note">Transparência é o maior diferencial de uma boa operação</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ SEÇÃO 5: COMERCIAL ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🤝</div>
+      <div class="section-title">Postura Comercial</div>
+      <span class="section-badge" id="badge-comercial">0/4</span>
+    </div>
+    <div class="section-body">
+
+      <div class="item" data-group="comercial" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Entender o fluxo de operação do cliente antes de oferecer solução</div>
+          <div class="item-note">"Quem faz seu desembaraço hoje?" — ouvir antes de vender</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+      <div class="item" data-group="comercial" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Vender resultado, não frete — custo, prazo, previsibilidade</div>
+          <div class="item-note">O cliente compra segurança, não cotação</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+      <div class="item" data-group="comercial" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Fazer follow-up de proposta dentro do prazo combinado</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+      <div class="item" data-group="comercial" onclick="toggleItem(this)">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="item-content">
+          <div class="item-label">Registrar ocorrências para aprendizado e melhoria contínua</div>
+          <div class="item-note">Conhecimento gera credibilidade — anote o que funcionou e o que não funcionou</div>
+        </div>
+        <span class="item-tag tag-op">Op</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ANOTAÇÕES -->
+  <div class="notes-area">
+    <div class="notes-label">Observações do dia</div>
+    <div class="notes-lines">
+      <div class="notes-line"></div>
+      <div class="notes-line"></div>
+      <div class="notes-line"></div>
+      <div class="notes-line"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">Exportação do Zero · <span>Filipe Morais</span></div>
+    <button class="footer-reset" onclick="resetAll()">↺ Reiniciar checklist</button>
+  </div>
+
+</div>
+
+<script>
+  // Data de hoje
+  const hoje = new Date();
+  const dd = String(hoje.getDate()).padStart(2,'0');
+  const mm = String(hoje.getMonth()+1).padStart(2,'0');
+  const yy = hoje.getFullYear();
+  document.getElementById('dataHoje').textContent = `${dd}/${mm}/${yy}`;
+
+  const groups = {
+    docs:      { badge: 'badge-docs',      total: 8 },
+    pre:       { badge: 'badge-pre',       total: 6 },
+    despacho:  { badge: 'badge-despacho',  total: 5 },
+    logistica: { badge: 'badge-logistica', total: 5 },
+    comercial: { badge: 'badge-comercial', total: 4 },
+  };
+
+  function updateProgress() {
+    let total = 0, done = 0;
+
+    // items
+    document.querySelectorAll('.item').forEach(i => {
+      total++;
+      if (i.classList.contains('done')) done++;
+    });
+
+    // docs
+    document.querySelectorAll('.doc-card').forEach(d => {
+      total++;
+      if (d.classList.contains('checked')) done++;
+    });
+
+    document.getElementById('progressCount').textContent = `${done} / ${total}`;
+    document.getElementById('progressFill').style.width = total ? `${(done/total)*100}%` : '0%';
+
+    // badges por grupo
+    Object.keys(groups).forEach(g => {
+      const all = document.querySelectorAll(`[data-group="${g}"]`);
+      const doneG = Array.from(all).filter(el =>
+        el.classList.contains('done') || el.classList.contains('checked')
+      ).length;
+      const badge = document.getElementById(groups[g].badge);
+      if (badge) badge.textContent = `${doneG}/${groups[g].total}`;
+    });
+  }
+
+  function toggleItem(el) {
+    el.classList.toggle('done');
+    el.querySelector('.check-box').classList.toggle('checked');
+    updateProgress();
+  }
+
+  function toggleDoc(el) {
+    el.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.item').forEach(i => {
+      i.classList.remove('done');
+      i.querySelector('.check-box').classList.remove('checked');
+    });
+    document.querySelectorAll('.doc-card').forEach(d => d.classList.remove('checked'));
+    updateProgress();
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
